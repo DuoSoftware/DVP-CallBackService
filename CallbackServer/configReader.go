@@ -18,7 +18,8 @@ var callbackServerId string
 var hostIpAddress string
 var port string
 var externalCallbackRequestFrequency time.Duration
-var campaignService string
+var campaignServiceHost string
+var campaignServicePort string
 
 func GetDirPath() string {
 	envPath := os.Getenv("GO_CONFIG_DIR")
@@ -49,44 +50,25 @@ func GetDefaultConfig() Configuration {
 		defconfiguration.HostIpAddress = "127.0.0.1"
 		defconfiguration.Port = "2226"
 		defconfiguration.ExternalCallbackRequestFrequency = 300
-		defconfiguration.CampaignService = "http://127.0.0.1:2222/DVP/API/6.0"
+		defconfiguration.CampaignServiceHost = "127.0.0.1"
+		defconfiguration.CampaignServicePort = "2222"
 	}
 
 	return defconfiguration
 }
 
 func LoadDefaultConfig() {
-	confPath := filepath.Join(dirPath, "conf.json")
-	fmt.Println("LoadDefaultConfig config path: ", confPath)
+	defconfiguration := GetDefaultConfig()
 
-	content, operr := ioutil.ReadFile(confPath)
-	if operr != nil {
-		fmt.Println(operr)
-	}
-
-	defconfiguration := Configuration{}
-	deferr := json.Unmarshal(content, &defconfiguration)
-
-	if deferr != nil {
-		fmt.Println("error:", deferr)
-		redisIp = "127.0.0.1:6379"
-		redisPort = "6379"
-		redisDb = 6
-		callbackServerId = "1"
-		hostIpAddress = "127.0.0.1"
-		port = "2226"
-		externalCallbackRequestFrequency = 300
-		campaignService = "http://127.0.0.1:2222/DVP/API/6.0"
-	} else {
-		redisIp = fmt.Sprintf("%s:%s", defconfiguration.RedisIp, defconfiguration.RedisPort)
-		redisPort = defconfiguration.RedisPort
-		redisDb = defconfiguration.RedisDb
-		callbackServerId = defconfiguration.CallbackServerId
-		hostIpAddress = defconfiguration.HostIpAddress
-		port = defconfiguration.Port
-		externalCallbackRequestFrequency = defconfiguration.ExternalCallbackRequestFrequency
-		campaignService = defconfiguration.CampaignService
-	}
+	redisIp = fmt.Sprintf("%s:%s", defconfiguration.RedisIp, defconfiguration.RedisPort)
+	redisPort = defconfiguration.RedisPort
+	redisDb = defconfiguration.RedisDb
+	callbackServerId = defconfiguration.CallbackServerId
+	hostIpAddress = defconfiguration.HostIpAddress
+	port = defconfiguration.Port
+	externalCallbackRequestFrequency = defconfiguration.ExternalCallbackRequestFrequency
+	campaignServiceHost = defconfiguration.CampaignServiceHost
+	campaignServicePort = defconfiguration.CampaignServicePort
 }
 
 func LoadConfiguration() {
@@ -114,7 +96,8 @@ func LoadConfiguration() {
 		hostIpAddress = os.Getenv(envconfiguration.HostIpAddress)
 		port = os.Getenv(envconfiguration.Port)
 		externalCallbackRequestFrequencyTemp := os.Getenv(envconfiguration.ExternalCallbackRequestFrequency)
-		campaignService = os.Getenv(envconfiguration.CampaignService)
+		campaignServiceHost = os.Getenv(envconfiguration.CampaignServiceHost)
+		campaignServicePort = os.Getenv(envconfiguration.CampaignServicePort)
 
 		if redisIp == "" {
 			redisIp = defConfig.RedisIp
@@ -139,8 +122,11 @@ func LoadConfiguration() {
 		} else {
 			externalCallbackRequestFrequency, _ = time.ParseDuration(externalCallbackRequestFrequencyTemp)
 		}
-		if campaignService == "" {
-			campaignService = defConfig.CampaignService
+		if campaignServiceHost == "" {
+			campaignServiceHost = defConfig.CampaignServiceHost
+		}
+		if campaignServicePort == "" {
+			campaignServicePort = defConfig.CampaignServicePort
 		}
 
 		redisIp = fmt.Sprintf("%s:%s", redisIp, redisPort)

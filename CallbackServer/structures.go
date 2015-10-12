@@ -12,7 +12,8 @@ type Configuration struct {
 	HostIpAddress                    string
 	Port                             string
 	ExternalCallbackRequestFrequency time.Duration
-	CampaignService                  string
+	CampaignServiceHost              string
+	CampaignServicePort              string
 }
 
 type EnvConfiguration struct {
@@ -23,7 +24,8 @@ type EnvConfiguration struct {
 	HostIpAddress                    string
 	Port                             string
 	ExternalCallbackRequestFrequency string
-	CampaignService                  string
+	CampaignServiceHost              string
+	CampaignServicePort              string
 }
 
 type CampaignCallback struct {
