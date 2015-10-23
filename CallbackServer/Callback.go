@@ -19,7 +19,7 @@ func UploadCampaignMgrCallbackInfo(company, tenant int, callback string) {
 	}()
 	fmt.Println("request:", callback)
 
-	serviceurl := fmt.Sprintf("http://%s/DVP/API/6.0/CampaignManager/Callback", CreateHost(campaignServiceHost, campaignServicePort))
+	serviceurl := fmt.Sprintf("http://%s/DVP/API/1.0.0.0/CampaignManager/Callback", CreateHost(campaignServiceHost, campaignServicePort))
 	authToken := fmt.Sprintf("%d#%d", tenant, company)
 	req, err := http.NewRequest("POST", serviceurl, bytes.NewBufferString(callback))
 	req.Header.Set("Content-Type", "application/json")
