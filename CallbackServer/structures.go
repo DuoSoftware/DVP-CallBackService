@@ -37,4 +37,5 @@ type CampaignCallback struct {
 	DialoutTime time.Time
 	CallbackUrl string
 	CallbackObj string
+	CampaignId  string
 }

@@ -24,7 +24,7 @@ func (callbackServerSelfHost CallbackServerSelfHost) AddCallback(callbackInfo Ca
 
 		go AddCallbackInfoToRedis(company, tenant, callbackInfo)
 		if callbackInfo.Class == "DIALER" && callbackInfo.Type == "CALLBACK" && callbackInfo.Category == "INTERNAL" {
-			go UploadCampaignMgrCallbackInfo(company, tenant, callbackInfo.CallbackObj)
+			go UploadCampaignMgrCallbackInfo(company, tenant, callbackInfo.CampaignId, callbackInfo.CallbackObj)
 		}
 	}
 	return
