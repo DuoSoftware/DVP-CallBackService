@@ -75,6 +75,25 @@ func RedisGet(key string) string {
 	return strObj
 }
 
+func SecurityGet(key string) string {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("Recovered in RedisGet", r)
+		}
+	}()
+	client, err := redis.DialTimeout("tcp", redisIp, time.Duration(10)*time.Second)
+	errHndlr(err)
+	defer client.Close()
+
+	// select database
+	r := client.Cmd("select", redisDb)
+	errHndlr(r.Err)
+
+	strObj, _ := client.Cmd("get", key).Str()
+	fmt.Println(strObj)
+	return strObj
+}
+
 func RedisSearchKeys(pattern string) []string {
 	defer func() {
 		if r := recover(); r != nil {
@@ -352,7 +371,7 @@ func RedisListLlen(lname string) int {
 }
 
 // Redis Shorted List
-func RedisZadd(lname, value string, score float64) string {
+func RedisZadd(lname, value string, score float64) (string, error) {
 	defer func() {
 		if r := recover(); r != nil {
 			fmt.Println("Recovered in RedisListLpop", r)
@@ -360,6 +379,9 @@ func RedisZadd(lname, value string, score float64) string {
 	}()
 	client, err := redis.DialTimeout("tcp", redisIp, time.Duration(10)*time.Second)
 	errHndlr(err)
+	if err != nil {
+		return "", err
+	}
 	defer client.Close()
 
 	// select database
@@ -369,7 +391,7 @@ func RedisZadd(lname, value string, score float64) string {
 	zItem, err := client.Cmd("zadd", lname, score, value).Str()
 	errHndlr(err)
 	fmt.Println(zItem)
-	return zItem
+	return zItem, err
 }
 
 func RedisZScore(lname, value string) string {

@@ -47,14 +47,15 @@ func UploadCampaignMgrCallbackInfo(company, tenant int, campaignId, callback str
 }
 
 //----------Callbak Info-----------------------
-func AddCallbackInfoToRedis(company, tenant int, callback CampaignCallback) {
+func AddCallbackInfoToRedis(company, tenant int, callback CampaignCallback, aci chan error) {
 	callback.Company = company
 	callback.Tenant = tenant
 
 	callbackKey := fmt.Sprintf("CallbackInfo:%s:%d:%d", callbackServerId, company, tenant)
 	score := float64(callback.DialoutTime.Unix())
 	jsonData, _ := json.Marshal(callback)
-	RedisZadd(callbackKey, string(jsonData), score)
+	_, err := RedisZadd(callbackKey, string(jsonData), score)
+	aci <- err
 }
 
 func SetLastExecuteTime(executeTime string) string {

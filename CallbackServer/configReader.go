@@ -11,6 +11,8 @@ import (
 )
 
 var dirPath string
+var securityIp string
+var securityPort string
 var redisIp string
 var redisPort string
 var redisDb int
@@ -43,6 +45,8 @@ func GetDefaultConfig() Configuration {
 
 	if deferr != nil {
 		fmt.Println("error:", deferr)
+		defconfiguration.SecurityIp = "127.0.0.1"
+		defconfiguration.SecurityPort = "6379"
 		defconfiguration.RedisIp = "127.0.0.1"
 		defconfiguration.RedisPort = "6379"
 		defconfiguration.RedisDb = 6
@@ -59,7 +63,8 @@ func GetDefaultConfig() Configuration {
 
 func LoadDefaultConfig() {
 	defconfiguration := GetDefaultConfig()
-
+	securityIp = fmt.Sprintf("%s:%s", defconfiguration.RedisIp, defconfiguration.RedisPort)
+	securityPort = defconfiguration.RedisPort
 	redisIp = fmt.Sprintf("%s:%s", defconfiguration.RedisIp, defconfiguration.RedisPort)
 	redisPort = defconfiguration.RedisPort
 	redisDb = defconfiguration.RedisDb
@@ -89,6 +94,8 @@ func LoadConfiguration() {
 	} else {
 		var converr error
 		defConfig := GetDefaultConfig()
+		securityIp = os.Getenv(envconfiguration.SecurityIp)
+		securityPort = os.Getenv(envconfiguration.SecurityPort)
 		redisIp = os.Getenv(envconfiguration.RedisIp)
 		redisPort = os.Getenv(envconfiguration.RedisPort)
 		redisDb, converr = strconv.Atoi(os.Getenv(envconfiguration.RedisDb))
@@ -99,6 +106,12 @@ func LoadConfiguration() {
 		campaignServiceHost = os.Getenv(envconfiguration.CampaignServiceHost)
 		campaignServicePort = os.Getenv(envconfiguration.CampaignServicePort)
 
+		if securityIp == "" {
+			securityIp = defConfig.SecurityIp
+		}
+		if securityPort == "" {
+			securityPort = defConfig.SecurityPort
+		}
 		if redisIp == "" {
 			redisIp = defConfig.RedisIp
 		}
@@ -130,6 +143,7 @@ func LoadConfiguration() {
 		}
 
 		redisIp = fmt.Sprintf("%s:%s", redisIp, redisPort)
+		securityIp = fmt.Sprintf("%s:%s", securityIp, securityPort)
 	}
 
 	fmt.Println("redisIp:", redisIp)

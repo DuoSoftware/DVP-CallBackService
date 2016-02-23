@@ -5,6 +5,8 @@ import (
 )
 
 type Configuration struct {
+	SecurityIp                       string
+	SecurityPort                     string
 	RedisIp                          string
 	RedisPort                        string
 	RedisDb                          int
@@ -17,6 +19,8 @@ type Configuration struct {
 }
 
 type EnvConfiguration struct {
+	SecurityIp                       string
+	SecurityPort                     string
 	RedisIp                          string
 	RedisPort                        string
 	RedisDb                          string
@@ -38,4 +42,11 @@ type CampaignCallback struct {
 	CallbackUrl string
 	CallbackObj string
 	CampaignId  string
+}
+
+type Result struct {
+	Exception     string
+	CustomMessage string
+	IsSuccess     bool
+	Result        string
 }

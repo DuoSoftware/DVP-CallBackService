@@ -25,8 +25,10 @@ func main() {
 }
 
 func InitiateService() {
+	jwtMiddleware := loadJwtMiddleware()
 	gorest.RegisterService(new(CallbackServerSelfHost))
 	http.Handle("/", gorest.Handle())
 	addr := fmt.Sprintf(":%s", port)
-	http.ListenAndServe(addr, nil)
+	app := jwtMiddleware.Handler(gorest.Handle())
+	http.ListenAndServe(addr, app)
 }
