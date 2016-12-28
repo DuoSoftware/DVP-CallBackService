@@ -1,7 +1,7 @@
 {
     "RedisIp": "SYS_REDIS_HOST",
 	"RedisPort": "SYS_REDIS_PORT",
-	"RedisDb": "SYS_REDIS_DB",
+	"RedisDb": "SYS_REDIS_DB_ARDS",
 	"CallbackServerId": "SYS_CALLBACKSERVER_ID",
 	"HostIpAddress": "LB_FRONTEND",
 	"Port":"HOST_CALLBACKSERVER_PORT",
