@@ -1,5 +1,7 @@
 {
-    "RedisIp": "192.168.3.200",
+	"SecurityIp":"45.55.142.207",
+	"SecurityPort":"6379",
+    "RedisIp": "45.55.142.207",
 	"RedisPort": "6379",
 	"RedisDb": 5,
 	"CallbackServerId": "1",
