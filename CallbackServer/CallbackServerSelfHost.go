@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/DuoSoftware/gorest"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/gorilla/context"
 )
 
 type CallbackServerSelfHost struct {
@@ -14,48 +12,36 @@ type CallbackServerSelfHost struct {
 }
 
 func (callbackServerSelfHost CallbackServerSelfHost) AddCallback(callbackInfo CampaignCallback) {
-	user := context.Get(callbackServerSelfHost.Context.Request(), "user")
-	if user != nil {
-		iTenant := user.(*jwt.Token).Claims["tenant"]
-		iCompany := user.(*jwt.Token).Claims["company"]
-		if iTenant != nil && iCompany != nil {
-			tenant := int(iTenant.(float64))
-			company := int(iCompany.(float64))
-			authHeaderStr := fmt.Sprintf("%d#%d", tenant, company)
-			fmt.Println("Start AddCallback: ", callbackInfo.CallbackUrl, "#", callbackInfo.DialoutTime.String())
-			fmt.Println(authHeaderStr)
+	company, tenant, _, msg := decodeJwtDialer(callbackServerSelfHost, "dialer", "read")
+	if company != 0 && tenant != 0 {
+		authHeaderStr := fmt.Sprintf("%d#%d", tenant, company)
+		fmt.Println("Start AddCallback: ", callbackInfo.CallbackUrl, "#", callbackInfo.DialoutTime.String())
+		fmt.Println(authHeaderStr)
 
-			ch := make(chan error)
-			go AddCallbackInfoToRedis(company, tenant, callbackInfo, ch)
+		ch := make(chan error)
+		go AddCallbackInfoToRedis(company, tenant, callbackInfo, ch)
+		if <-ch != nil {
 			var err = <-ch
-			close(ch)
 			fmt.Println(err.Error())
-			if err != nil {
-				callbackServerSelfHost.RB().Write(ResponseGenerator(false, "Add callback info failed", "", err.Error()))
-				return
-			} else {
-				callbackServerSelfHost.RB().Write(ResponseGenerator(true, "Add callback info success", "", ""))
-				return
-				if callbackInfo.Class == "DIALER" && callbackInfo.Type == "CALLBACK" && callbackInfo.Category == "INTERNAL" {
-					go UploadCampaignMgrCallbackInfo(company, tenant, callbackInfo.CampaignId, callbackInfo.CallbackObj)
-				}
-			}
+			close(ch)
+
+			errStr, _ := json.Marshal(ResponseGenerator(false, "Add callback info failed", "", err.Error()))
+
+			callbackServerSelfHost.RB().Write(errStr)
 		} else {
-			callbackServerSelfHost.RB().Write(ResponseGenerator(false, "Invalid company or tenant", "", ""))
-			return
+			close(ch)
+
+			resStr, _ := json.Marshal(ResponseGenerator(true, "Add callback info success", "", ""))
+			callbackServerSelfHost.RB().Write(resStr)
+			if callbackInfo.Class == "DIALER" && callbackInfo.Type == "CALLBACK" && callbackInfo.Category == "INTERNAL" {
+				go UploadCampaignMgrCallbackInfo(company, tenant, callbackInfo.CampaignId, callbackInfo.CallbackObj)
+			}
 		}
+
+		return
 	} else {
-		callbackServerSelfHost.RB().Write(ResponseGenerator(false, "User data not found in JWT", "", ""))
+		defStr, _ := json.Marshal(msg)
+		callbackServerSelfHost.RB().Write(defStr)
 		return
 	}
-}
-
-func ResponseGenerator(isSuccess bool, customMessage, result, exception string) []byte {
-	res := Result{}
-	res.IsSuccess = isSuccess
-	res.CustomMessage = customMessage
-	res.Exception = exception
-	res.Result = result
-	resb, _ := json.Marshal(res)
-	return resb
 }

@@ -55,7 +55,11 @@ func AddCallbackInfoToRedis(company, tenant int, callback CampaignCallback, aci 
 	score := float64(callback.DialoutTime.Unix())
 	jsonData, _ := json.Marshal(callback)
 	_, err := RedisZadd(callbackKey, string(jsonData), score)
-	aci <- err
+	if err != nil {
+		aci <- err
+	} else {
+		aci <- nil
+	}
 }
 
 func SetLastExecuteTime(executeTime string) string {

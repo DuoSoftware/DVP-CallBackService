@@ -9,6 +9,7 @@ type Configuration struct {
 	SecurityPort                     string
 	RedisIp                          string
 	RedisPort                        string
+	RedisPassword                    string
 	RedisDb                          int
 	CallbackServerId                 string
 	HostIpAddress                    string
@@ -23,6 +24,7 @@ type EnvConfiguration struct {
 	SecurityPort                     string
 	RedisIp                          string
 	RedisPort                        string
+	RedisPassword                    string
 	RedisDb                          string
 	CallbackServerId                 string
 	HostIpAddress                    string

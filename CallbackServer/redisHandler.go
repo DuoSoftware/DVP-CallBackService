@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/fzzy/radix/redis"
+	"strconv"
 	"time"
 )
 
@@ -19,6 +20,10 @@ func RedisAdd(key, value string) string {
 	client, err := redis.DialTimeout("tcp", redisIp, time.Duration(10)*time.Second)
 	errHndlr(err)
 	defer client.Close()
+
+	//authServer
+	authE := client.Cmd("auth", redisPassword)
+	errHndlr(authE.Err)
 
 	// select database
 	r := client.Cmd("select", redisDb)
@@ -46,6 +51,10 @@ func RedisSet(key, value string) string {
 	errHndlr(err)
 	defer client.Close()
 
+	//authServer
+	authE := client.Cmd("auth", redisPassword)
+	errHndlr(authE.Err)
+
 	// select database
 	r := client.Cmd("select", redisDb)
 	errHndlr(r.Err)
@@ -66,24 +75,9 @@ func RedisGet(key string) string {
 	errHndlr(err)
 	defer client.Close()
 
-	// select database
-	r := client.Cmd("select", redisDb)
-	errHndlr(r.Err)
-
-	strObj, _ := client.Cmd("get", key).Str()
-	fmt.Println(strObj)
-	return strObj
-}
-
-func SecurityGet(key string) string {
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Println("Recovered in RedisGet", r)
-		}
-	}()
-	client, err := redis.DialTimeout("tcp", redisIp, time.Duration(10)*time.Second)
-	errHndlr(err)
-	defer client.Close()
+	//authServer
+	authE := client.Cmd("auth", redisPassword)
+	errHndlr(authE.Err)
 
 	// select database
 	r := client.Cmd("select", redisDb)
@@ -104,6 +98,10 @@ func RedisSearchKeys(pattern string) []string {
 	errHndlr(err)
 	defer client.Close()
 
+	//authServer
+	authE := client.Cmd("auth", redisPassword)
+	errHndlr(authE.Err)
+
 	// select database
 	r := client.Cmd("select", redisDb)
 	errHndlr(r.Err)
@@ -121,6 +119,10 @@ func RedisIncr(key string) int {
 	client, err := redis.DialTimeout("tcp", redisIp, time.Duration(10)*time.Second)
 	errHndlr(err)
 	defer client.Close()
+
+	//authServer
+	authE := client.Cmd("auth", redisPassword)
+	errHndlr(authE.Err)
 
 	// select database
 	r := client.Cmd("select", redisDb)
@@ -142,6 +144,10 @@ func RedisIncrBy(key string, value int) int {
 	errHndlr(err)
 	defer client.Close()
 
+	//authServer
+	authE := client.Cmd("auth", redisPassword)
+	errHndlr(authE.Err)
+
 	// select database
 	r := client.Cmd("select", redisDb)
 	errHndlr(r.Err)
@@ -162,6 +168,10 @@ func RedisRemove(key string) bool {
 	errHndlr(err)
 	defer client.Close()
 
+	//authServer
+	authE := client.Cmd("auth", redisPassword)
+	errHndlr(authE.Err)
+
 	// select database
 	r := client.Cmd("select", redisDb)
 	errHndlr(r.Err)
@@ -181,6 +191,10 @@ func RedisCheckKeyExist(key string) bool {
 	client, err := redis.DialTimeout("tcp", redisIp, time.Duration(10)*time.Second)
 	errHndlr(err)
 	defer client.Close()
+
+	//authServer
+	authE := client.Cmd("auth", redisPassword)
+	errHndlr(authE.Err)
 
 	// select database
 	r := client.Cmd("select", redisDb)
@@ -203,6 +217,10 @@ func RedisHashGetAll(hkey string) map[string]string {
 	client, err := redis.DialTimeout("tcp", redisIp, time.Duration(10)*time.Second)
 	errHndlr(err)
 	defer client.Close()
+
+	//authServer
+	authE := client.Cmd("auth", redisPassword)
+	errHndlr(authE.Err)
 
 	// select database
 	r := client.Cmd("select", redisDb)
@@ -227,6 +245,10 @@ func RedisHashGetField(hkey, field string) string {
 	errHndlr(err)
 	defer client.Close()
 
+	//authServer
+	authE := client.Cmd("auth", redisPassword)
+	errHndlr(authE.Err)
+
 	// select database
 	r := client.Cmd("select", redisDb)
 	errHndlr(r.Err)
@@ -248,6 +270,10 @@ func RedisHashSetField(hkey, field, value string) bool {
 	errHndlr(err)
 	defer client.Close()
 
+	//authServer
+	authE := client.Cmd("auth", redisPassword)
+	errHndlr(authE.Err)
+
 	// select database
 	r := client.Cmd("select", redisDb)
 	errHndlr(r.Err)
@@ -265,6 +291,10 @@ func RedisHashSetMultipleField(hkey string, data map[string]string) bool {
 	client, err := redis.DialTimeout("tcp", redisIp, time.Duration(10)*time.Second)
 	errHndlr(err)
 	defer client.Close()
+
+	//authServer
+	authE := client.Cmd("auth", redisPassword)
+	errHndlr(authE.Err)
 
 	// select database
 	r := client.Cmd("select", redisDb)
@@ -287,6 +317,10 @@ func RedisRemoveHashField(hkey, field string) bool {
 	errHndlr(err)
 	defer client.Close()
 
+	//authServer
+	authE := client.Cmd("auth", redisPassword)
+	errHndlr(authE.Err)
+
 	// select database
 	r := client.Cmd("select", redisDb)
 	errHndlr(r.Err)
@@ -307,6 +341,10 @@ func RedisListLpop(lname string) string {
 	errHndlr(err)
 	defer client.Close()
 
+	//authServer
+	authE := client.Cmd("auth", redisPassword)
+	errHndlr(authE.Err)
+
 	// select database
 	r := client.Cmd("select", redisDb)
 	errHndlr(r.Err)
@@ -326,6 +364,10 @@ func RedisListLpush(lname, value string) bool {
 	errHndlr(err)
 	defer client.Close()
 
+	//authServer
+	authE := client.Cmd("auth", redisPassword)
+	errHndlr(authE.Err)
+
 	// select database
 	r := client.Cmd("select", redisDb)
 	errHndlr(r.Err)
@@ -344,6 +386,10 @@ func RedisListRpush(lname, value string) bool {
 	errHndlr(err)
 	defer client.Close()
 
+	//authServer
+	authE := client.Cmd("auth", redisPassword)
+	errHndlr(authE.Err)
+
 	// select database
 	r := client.Cmd("select", redisDb)
 	errHndlr(r.Err)
@@ -361,6 +407,10 @@ func RedisListLlen(lname string) int {
 	client, err := redis.DialTimeout("tcp", redisIp, time.Duration(10)*time.Second)
 	errHndlr(err)
 	defer client.Close()
+
+	//authServer
+	authE := client.Cmd("auth", redisPassword)
+	errHndlr(authE.Err)
 
 	// select database
 	r := client.Cmd("select", redisDb)
@@ -384,14 +434,19 @@ func RedisZadd(lname, value string, score float64) (string, error) {
 	}
 	defer client.Close()
 
+	//authServer
+	authE := client.Cmd("auth", redisPassword)
+	errHndlr(authE.Err)
+
 	// select database
 	r := client.Cmd("select", redisDb)
 	errHndlr(r.Err)
 
-	zItem, err := client.Cmd("zadd", lname, score, value).Str()
+	zItem, err := client.Cmd("zadd", lname, score, value).Int()
 	errHndlr(err)
-	fmt.Println(zItem)
-	return zItem, err
+	strZItem := strconv.Itoa(zItem)
+	fmt.Println(strZItem)
+	return strZItem, err
 }
 
 func RedisZScore(lname, value string) string {
@@ -403,6 +458,10 @@ func RedisZScore(lname, value string) string {
 	client, err := redis.DialTimeout("tcp", redisIp, time.Duration(10)*time.Second)
 	errHndlr(err)
 	defer client.Close()
+
+	//authServer
+	authE := client.Cmd("auth", redisPassword)
+	errHndlr(authE.Err)
 
 	// select database
 	r := client.Cmd("select", redisDb)
@@ -424,6 +483,10 @@ func RedisZRangeByScore(lname, min, max string) []string {
 	errHndlr(err)
 	defer client.Close()
 
+	//authServer
+	authE := client.Cmd("auth", redisPassword)
+	errHndlr(authE.Err)
+
 	// select database
 	r := client.Cmd("select", redisDb)
 	errHndlr(r.Err)
@@ -443,6 +506,10 @@ func RedisZRemove(lname, value string) bool {
 	client, err := redis.DialTimeout("tcp", redisIp, time.Duration(10)*time.Second)
 	errHndlr(err)
 	defer client.Close()
+
+	//authServer
+	authE := client.Cmd("auth", redisPassword)
+	errHndlr(authE.Err)
 
 	// select database
 	r := client.Cmd("select", redisDb)

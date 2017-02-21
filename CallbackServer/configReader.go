@@ -13,6 +13,7 @@ import (
 var dirPath string
 var securityIp string
 var securityPort string
+var redisPassword string
 var redisIp string
 var redisPort string
 var redisDb int
@@ -49,6 +50,7 @@ func GetDefaultConfig() Configuration {
 		defconfiguration.SecurityPort = "6379"
 		defconfiguration.RedisIp = "127.0.0.1"
 		defconfiguration.RedisPort = "6379"
+		defconfiguration.RedisPassword = "DuoS123"
 		defconfiguration.RedisDb = 6
 		defconfiguration.CallbackServerId = "1"
 		defconfiguration.HostIpAddress = "127.0.0.1"
@@ -65,6 +67,7 @@ func LoadDefaultConfig() {
 	defconfiguration := GetDefaultConfig()
 	securityIp = fmt.Sprintf("%s:%s", defconfiguration.RedisIp, defconfiguration.RedisPort)
 	securityPort = defconfiguration.RedisPort
+	redisPassword = defconfiguration.RedisPassword
 	redisIp = fmt.Sprintf("%s:%s", defconfiguration.RedisIp, defconfiguration.RedisPort)
 	redisPort = defconfiguration.RedisPort
 	redisDb = defconfiguration.RedisDb
@@ -96,6 +99,7 @@ func LoadConfiguration() {
 		defConfig := GetDefaultConfig()
 		securityIp = os.Getenv(envconfiguration.SecurityIp)
 		securityPort = os.Getenv(envconfiguration.SecurityPort)
+		redisPassword = os.Getenv(envconfiguration.RedisPassword)
 		redisIp = os.Getenv(envconfiguration.RedisIp)
 		redisPort = os.Getenv(envconfiguration.RedisPort)
 		redisDb, converr = strconv.Atoi(os.Getenv(envconfiguration.RedisDb))
@@ -117,6 +121,9 @@ func LoadConfiguration() {
 		}
 		if redisPort == "" {
 			redisPort = defConfig.RedisPort
+		}
+		if redisPassword == "" {
+			redisPassword = defConfig.RedisPassword
 		}
 		if redisDb == 0 || converr != nil {
 			redisDb = defConfig.RedisDb
