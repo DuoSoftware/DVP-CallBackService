@@ -23,6 +23,7 @@ var port string
 var externalCallbackRequestFrequency time.Duration
 var campaignServiceHost string
 var campaignServicePort string
+var accessToken string
 
 func GetDirPath() string {
 	envPath := os.Getenv("GO_CONFIG_DIR")
@@ -58,6 +59,7 @@ func GetDefaultConfig() Configuration {
 		defconfiguration.ExternalCallbackRequestFrequency = 300
 		defconfiguration.CampaignServiceHost = "127.0.0.1"
 		defconfiguration.CampaignServicePort = "2222"
+		defconfiguration.AccessToken = ""
 	}
 
 	return defconfiguration
@@ -77,6 +79,7 @@ func LoadDefaultConfig() {
 	externalCallbackRequestFrequency = defconfiguration.ExternalCallbackRequestFrequency
 	campaignServiceHost = defconfiguration.CampaignServiceHost
 	campaignServicePort = defconfiguration.CampaignServicePort
+	accessToken = defconfiguration.AccessToken
 }
 
 func LoadConfiguration() {
@@ -109,6 +112,7 @@ func LoadConfiguration() {
 		externalCallbackRequestFrequencyTemp := os.Getenv(envconfiguration.ExternalCallbackRequestFrequency)
 		campaignServiceHost = os.Getenv(envconfiguration.CampaignServiceHost)
 		campaignServicePort = os.Getenv(envconfiguration.CampaignServicePort)
+		accessToken = os.Getenv(envconfiguration.AccessToken)
 
 		if securityIp == "" {
 			securityIp = defConfig.SecurityIp
@@ -147,6 +151,9 @@ func LoadConfiguration() {
 		}
 		if campaignServicePort == "" {
 			campaignServicePort = defConfig.CampaignServicePort
+		}
+		if accessToken == "" {
+			accessToken = defConfig.AccessToken
 		}
 
 		redisIp = fmt.Sprintf("%s:%s", redisIp, redisPort)

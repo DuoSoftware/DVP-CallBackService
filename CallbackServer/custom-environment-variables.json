@@ -10,5 +10,6 @@
 	"Port":"HOST_CALLBACKSERVER_PORT",
 	"ExternalCallbackRequestFrequency": "SYS_CALLBACK_REQUEST_FREQUENCY",
 	"CampaignServiceHost": "SYS_CAMPAIGNMANAGER_HOST",
-	"CampaignServicePort": "SYS_CAMPAIGNMANAGER_PORT"
+	"CampaignServicePort": "SYS_CAMPAIGNMANAGER_PORT",
+	"AccessToken":"HOST_TOKEN"
 }

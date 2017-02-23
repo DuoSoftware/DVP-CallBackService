@@ -40,6 +40,6 @@ func InitiateService() {
 		MaxHeaderBytes: 1 << 20,
 	}
 
-	s.SetKeepAlivesEnabled(false)
+	//s.SetKeepAlivesEnabled(false)
 	s.ListenAndServe()
 }

@@ -101,10 +101,12 @@ func SendCallback(company, tenant int, callbackUrl, callbackObj string) {
 		}
 	}()
 	fmt.Println("request:", callbackUrl)
-	authToken := fmt.Sprintf("%d#%d", tenant, company)
+	authToken := fmt.Sprintf("bearer %s", accessToken)
+	internalAccess := fmt.Sprintf("%d:%d", tenant, company)
 	req, err := http.NewRequest("POST", callbackUrl, bytes.NewBufferString(callbackObj))
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", authToken)
+	req.Header.Set("companyinfo", internalAccess)
 	fmt.Println("request:", callbackObj)
 	client := &http.Client{}
 	resp, err := client.Do(req)
