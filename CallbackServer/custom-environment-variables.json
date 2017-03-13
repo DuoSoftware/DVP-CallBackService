@@ -7,7 +7,7 @@
 	"RedisDb": "SYS_REDIS_DB",
 	"CallbackServerId": "SYS_CALLBACKSERVER_ID",
 	"HostIpAddress": "LB_FRONTEND",
-	"Port":"HOST_CALLBACKSERVER_PORT",
+	"Port":"HOST_CALLBACKSERVICE_PORT",
 	"ExternalCallbackRequestFrequency": "SYS_CALLBACK_REQUEST_FREQUENCY",
 	"CampaignServiceHost": "SYS_CAMPAIGNMANAGER_HOST",
 	"CampaignServicePort": "SYS_CAMPAIGNMANAGER_PORT",
