@@ -661,6 +661,7 @@ func SecurityGet(key string) string {
 
 	if redisMode == "sentinel" {
 		client, err = sentinelPool.GetMaster(redisClusterName)
+		client.Cmd("select", "0")
 		errHndlr(err)
 		defer sentinelPool.PutMaster(redisClusterName, client)
 	} else {
