@@ -23,7 +23,13 @@ var port string
 var externalCallbackRequestFrequency time.Duration
 var campaignServiceHost string
 var campaignServicePort string
+var dialerServiceHost string
+var dialerServicePort string
 var accessToken string
+var redisMode string
+var redisClusterName string
+var sentinelHosts string
+var sentinelPort string
 
 func GetDirPath() string {
 	envPath := os.Getenv("GO_CONFIG_DIR")
@@ -58,8 +64,15 @@ func GetDefaultConfig() Configuration {
 		defconfiguration.Port = "2226"
 		defconfiguration.ExternalCallbackRequestFrequency = 300
 		defconfiguration.CampaignServiceHost = "127.0.0.1"
-		defconfiguration.CampaignServicePort = "2222"
+		defconfiguration.CampaignServicePort = "8827"
+		defconfiguration.DialerServiceHost = "127.0.0.1"
+		defconfiguration.DialerServicePort = "2226"
 		defconfiguration.AccessToken = ""
+		defconfiguration.RedisMode = "instance"
+		//instance, cluster, sentinel
+		defconfiguration.RedisClusterName = "redis-cluster"
+		defconfiguration.SentinelHosts = "138.197.90.92,45.55.205.92,138.197.90.92"
+		defconfiguration.SentinelPort = "16389"
 	}
 
 	return defconfiguration
@@ -79,7 +92,13 @@ func LoadDefaultConfig() {
 	externalCallbackRequestFrequency = defconfiguration.ExternalCallbackRequestFrequency
 	campaignServiceHost = defconfiguration.CampaignServiceHost
 	campaignServicePort = defconfiguration.CampaignServicePort
+	dialerServiceHost = defconfiguration.DialerServiceHost
+	dialerServicePort = defconfiguration.DialerServicePort
 	accessToken = defconfiguration.AccessToken
+	redisMode = defconfiguration.RedisMode
+	redisClusterName = defconfiguration.RedisClusterName
+	sentinelHosts = defconfiguration.SentinelHosts
+	sentinelPort = defconfiguration.SentinelPort
 }
 
 func LoadConfiguration() {
@@ -112,7 +131,13 @@ func LoadConfiguration() {
 		externalCallbackRequestFrequencyTemp := os.Getenv(envconfiguration.ExternalCallbackRequestFrequency)
 		campaignServiceHost = os.Getenv(envconfiguration.CampaignServiceHost)
 		campaignServicePort = os.Getenv(envconfiguration.CampaignServicePort)
+		dialerServiceHost = os.Getenv(envconfiguration.DialerServiceHost)
+		dialerServicePort = os.Getenv(envconfiguration.DialerServicePort)
 		accessToken = os.Getenv(envconfiguration.AccessToken)
+		redisMode = os.Getenv(envconfiguration.RedisMode)
+		redisClusterName = os.Getenv(envconfiguration.RedisClusterName)
+		sentinelHosts = os.Getenv(envconfiguration.SentinelHosts)
+		sentinelPort = os.Getenv(envconfiguration.SentinelPort)
 
 		if securityIp == "" {
 			securityIp = defConfig.SecurityIp
@@ -152,14 +177,35 @@ func LoadConfiguration() {
 		if campaignServicePort == "" {
 			campaignServicePort = defConfig.CampaignServicePort
 		}
+		if dialerServiceHost == "" {
+			dialerServiceHost = defConfig.DialerServiceHost
+		}
+		if dialerServicePort == "" {
+			dialerServicePort = defConfig.DialerServicePort
+		}
 		if accessToken == "" {
 			accessToken = defConfig.AccessToken
+		}
+		if redisMode == "" {
+			redisMode = defConfig.RedisMode
+		}
+		if redisClusterName == "" {
+			redisClusterName = defConfig.RedisClusterName
+		}
+		if sentinelHosts == "" {
+			sentinelHosts = defConfig.SentinelHosts
+		}
+		if sentinelPort == "" {
+			sentinelPort = defConfig.SentinelPort
 		}
 
 		redisIp = fmt.Sprintf("%s:%s", redisIp, redisPort)
 		securityIp = fmt.Sprintf("%s:%s", securityIp, securityPort)
 	}
 
+	fmt.Println("RedisMode:", redisMode)
 	fmt.Println("redisIp:", redisIp)
 	fmt.Println("redisDb:", redisDb)
+	fmt.Println("SentinelHosts:", sentinelHosts)
+	fmt.Println("SentinelPort:", sentinelPort)
 }

@@ -52,7 +52,7 @@ func AddCallbackInfoToRedis(company, tenant int, callback CampaignCallback, aci 
 	callback.Tenant = tenant
 
 	callbackKey := fmt.Sprintf("CallbackInfo:%s:%d:%d", callbackServerId, company, tenant)
-	score := float64(callback.DialoutTime.Unix())
+	score := float64(callback.DialoutTime.UTC().Unix())
 	jsonData, _ := json.Marshal(callback)
 	_, err := RedisZadd(callbackKey, string(jsonData), score)
 	if err != nil {

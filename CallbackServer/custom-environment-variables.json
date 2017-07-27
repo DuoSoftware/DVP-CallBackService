@@ -11,5 +11,11 @@
 	"ExternalCallbackRequestFrequency": "SYS_CALLBACK_REQUEST_FREQUENCY",
 	"CampaignServiceHost": "SYS_CAMPAIGNMANAGER_HOST",
 	"CampaignServicePort": "SYS_CAMPAIGNMANAGER_PORT",
-	"AccessToken":"HOST_TOKEN"
+	"DialerServiceHost": "SYS_DIALER_HOST",
+	"DialerServicePort": "SYS_DIALER_PORT",
+	"AccessToken":"HOST_TOKEN",
+	"RedisMode":"instance",
+	"RedisClusterName": "redis-cluster",
+	"SentinelHosts": "138.197.90.92,45.55.205.92,138.197.90.92",
+	"SentinelPort": "16389"
 }

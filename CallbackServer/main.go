@@ -18,6 +18,7 @@ func errHndlr(err error) {
 func main() {
 	fmt.Println("Hello World!")
 	LoadConfiguration()
+	InitiateRedis()
 	go InitiateService()
 	for {
 		go ExecuteCallback()
