@@ -61,7 +61,7 @@ func (callbackServerSelfHost CallbackServerSelfHost) AddCallbackByDuration(callb
 		callbackInfo.Company = company
 		callbackInfo.Tenant = tenant
 		callbackInfo.DialoutTime = callbackTime
-		callbackInfo.CallbackUrl = fmt.Sprintf("http://%s/DVP/API/1.0.0.0/Callback/AddCallback", CreateHost(dialerServiceHost, dialerServicePort))
+		callbackInfo.CallbackUrl = fmt.Sprintf("http://%s/DVP/DialerAPI/ResumeCallback", CreateHost(dialerServiceHost, dialerServicePort))
 
 		fmt.Println("Start AddCallback: ", callbackInfo.CallbackUrl, "#", callbackInfo.DialoutTime.String())
 		fmt.Println(authHeaderStr)
