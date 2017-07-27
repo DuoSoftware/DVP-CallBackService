@@ -664,7 +664,7 @@ func SecurityGet(key string) string {
 		errHndlr(err)
 		defer sentinelPool.PutMaster(redisClusterName, client)
 	} else {
-		client, err := redis.DialTimeout("tcp", securityIp, time.Duration(10)*time.Second)
+		client, err = redis.DialTimeout("tcp", securityIp, time.Duration(10)*time.Second)
 		errHndlr(err)
 		defer client.Close()
 
