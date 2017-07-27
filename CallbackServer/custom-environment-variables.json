@@ -14,8 +14,8 @@
 	"DialerServiceHost": "SYS_DIALER_HOST",
 	"DialerServicePort": "SYS_DIALER_PORT",
 	"AccessToken":"HOST_TOKEN",
-	"RedisMode":"instance",
-	"RedisClusterName": "redis-cluster",
-	"SentinelHosts": "138.197.90.92,45.55.205.92,138.197.90.92",
-	"SentinelPort": "16389"
+	"RedisMode":"SYS_REDIS_MODE",
+	"RedisClusterName":"SYS_REDIS_SENTINEL_NAME",
+	"SentinelHosts": "SYS_REDIS_SENTINEL_HOSTS",
+	"SentinelPort": "SYS_REDIS_SENTINEL_PORT"
 }
