@@ -86,10 +86,11 @@ func ExecuteCallback() {
 		campaignCallbacks := RedisZRangeByScore(callbackList, lastExeTimeStr, tmNowUtcStr)
 		for _, cmpCallbackStr := range campaignCallbacks {
 			fmt.Println("cmpCallbackStr: ", cmpCallbackStr)
+
+			RedisZRemove(callbackList, cmpCallbackStr)
 			var campCallback CampaignCallback
 			json.Unmarshal([]byte(cmpCallbackStr), &campCallback)
 			go SendCallback(campCallback.Company, campCallback.Tenant, campCallback.CallbackUrl, campCallback.CallbackObj)
-			RedisZRemove(callbackList, cmpCallbackStr)
 		}
 	}
 }
