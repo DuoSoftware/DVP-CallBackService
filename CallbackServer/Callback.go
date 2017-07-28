@@ -88,7 +88,7 @@ func SendCallback(campCallback CampaignCallback, tmNow string) {
 	defer resp.Body.Close()
 	fmt.Println("response Status:", resp.Status)
 	fmt.Println("response Headers:", resp.Header)
-	if resp.StatusCode == 200 {
+	if resp.StatusCode == 200 || resp.StatusCode == 202 {
 		go UploadDispatchedTime(campCallback.Tenant, campCallback.Company, campCallback.SessionId, tmNow)
 	}
 }
