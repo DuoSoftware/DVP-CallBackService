@@ -22,7 +22,7 @@ func main() {
 	go InitiateService()
 	for {
 		go ExecuteCallback()
-		time.Sleep(externalCallbackRequestFrequency * time.Second)
+		time.Sleep(externalCallbackRequestFrequency)
 	}
 }
 
