@@ -8,7 +8,7 @@
 	"CallbackServerId": "1",
 	"HostIpAddress": "127.0.0.1",
 	"Port":"2227",
-	"ExternalCallbackRequestFrequency": 10,
+	"ExternalCallbackRequestFrequency": 2,
 	"CampaignServiceHost": "127.0.0.1",
 	"CampaignServicePort": "8827",
 	"DialerServiceHost": "127.0.0.1",

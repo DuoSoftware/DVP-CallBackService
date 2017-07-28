@@ -169,7 +169,7 @@ func LoadConfiguration() {
 		if externalCallbackRequestFrequencyTemp == "" {
 			externalCallbackRequestFrequency = defConfig.ExternalCallbackRequestFrequency
 		} else {
-			externalCallbackRequestFrequency, _ = time.ParseDuration(externalCallbackRequestFrequencyTemp)
+			externalCallbackRequestFrequency, _ = time.ParseDuration(externalCallbackRequestFrequencyTemp + "s")
 		}
 		if campaignServiceHost == "" {
 			campaignServiceHost = defConfig.CampaignServiceHost
