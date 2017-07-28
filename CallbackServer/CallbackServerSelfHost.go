@@ -70,6 +70,7 @@ func (callbackServerSelfHost CallbackServerSelfHost) AddCallbackByDuration(callb
 
 		callbackData["CallbackType"] = callbackInfo.Type
 		callbackData["CallbackCategory"] = callbackInfo.Category
+		callbackData["SessionId"] = callbackInfo.SessionId
 
 		newCallbackObj, _ := json.Marshal(callbackData)
 
