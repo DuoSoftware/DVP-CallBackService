@@ -62,7 +62,7 @@ func GetDefaultConfig() Configuration {
 		defconfiguration.CallbackServerId = "1"
 		defconfiguration.HostIpAddress = "127.0.0.1"
 		defconfiguration.Port = "2226"
-		defconfiguration.ExternalCallbackRequestFrequency = 300
+		defconfiguration.ExternalCallbackRequestFrequency = "300"
 		defconfiguration.CampaignServiceHost = "127.0.0.1"
 		defconfiguration.CampaignServicePort = "8827"
 		defconfiguration.DialerServiceHost = "127.0.0.1"
@@ -89,7 +89,7 @@ func LoadDefaultConfig() {
 	callbackServerId = defconfiguration.CallbackServerId
 	hostIpAddress = defconfiguration.HostIpAddress
 	port = defconfiguration.Port
-	externalCallbackRequestFrequency = defconfiguration.ExternalCallbackRequestFrequency
+	externalCallbackRequestFrequency, _ = time.ParseDuration(defconfiguration.ExternalCallbackRequestFrequency + "s")
 	campaignServiceHost = defconfiguration.CampaignServiceHost
 	campaignServicePort = defconfiguration.CampaignServicePort
 	dialerServiceHost = defconfiguration.DialerServiceHost
@@ -167,7 +167,7 @@ func LoadConfiguration() {
 			port = defConfig.Port
 		}
 		if externalCallbackRequestFrequencyTemp == "" {
-			externalCallbackRequestFrequency = defConfig.ExternalCallbackRequestFrequency
+			externalCallbackRequestFrequency, _ = time.ParseDuration(defConfig.ExternalCallbackRequestFrequency + "s")
 		} else {
 			externalCallbackRequestFrequency, _ = time.ParseDuration(externalCallbackRequestFrequencyTemp + "s")
 		}

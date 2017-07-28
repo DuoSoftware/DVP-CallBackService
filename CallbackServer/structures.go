@@ -14,7 +14,7 @@ type Configuration struct {
 	CallbackServerId                 string
 	HostIpAddress                    string
 	Port                             string
-	ExternalCallbackRequestFrequency time.Duration
+	ExternalCallbackRequestFrequency string
 	CampaignServiceHost              string
 	CampaignServicePort              string
 	DialerServiceHost                string
@@ -48,12 +48,27 @@ type EnvConfiguration struct {
 	SentinelPort                     string
 }
 
+type ScheduledCallbackInfo struct {
+	Class          string
+	Type           string
+	Category       string
+	CompanyId      int
+	TenantId       int
+	SessionId      string
+	ContactId      string
+	CallbackData   string
+	RequestedTime  string
+	Duration       int
+	DispatchedTime string
+}
+
 type CampaignCallback struct {
 	Company          int
 	Tenant           int
 	Class            string
 	Type             string
 	Category         string
+	SessionId        string
 	DialoutTime      time.Time
 	CallbackDuration int
 	CallbackUrl      string

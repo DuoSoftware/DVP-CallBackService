@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/DuoSoftware/gorest"
+	"github.com/satori/go.uuid"
 	"time"
 )
 
@@ -58,10 +59,21 @@ func (callbackServerSelfHost CallbackServerSelfHost) AddCallbackByDuration(callb
 		callbackTime := time.Date(tmNow.Year(), tmNow.Month(), tmNow.Day(), tmNow.Hour(), tmNow.Minute(), secCount, 0, time.UTC)
 		fmt.Println("callbackTime:: ", callbackTime)
 
+		callbackInfo.SessionId = uuid.NewV4().String()
 		callbackInfo.Company = company
 		callbackInfo.Tenant = tenant
 		callbackInfo.DialoutTime = callbackTime
 		callbackInfo.CallbackUrl = fmt.Sprintf("http://%s/DVP/DialerAPI/ResumeCallback", CreateHost(dialerServiceHost, dialerServicePort))
+
+		var callbackData map[string]interface{}
+		json.Unmarshal([]byte(callbackInfo.CallbackObj), &callbackData)
+
+		callbackData["CallbackType"] = callbackInfo.Type
+		callbackData["CallbackCategory"] = callbackInfo.Category
+
+		newCallbackObj, _ := json.Marshal(callbackData)
+
+		callbackInfo.CallbackObj = string(newCallbackObj)
 
 		fmt.Println("Start AddCallback: ", callbackInfo.CallbackUrl, "#", callbackInfo.DialoutTime.String())
 		fmt.Println(authHeaderStr)
@@ -79,11 +91,23 @@ func (callbackServerSelfHost CallbackServerSelfHost) AddCallbackByDuration(callb
 		} else {
 			close(ch)
 
+			sc := ScheduledCallbackInfo{}
+			sc.TenantId = tenant
+			sc.CompanyId = company
+			sc.Class = callbackInfo.Class
+			sc.Type = callbackInfo.Type
+			sc.Category = callbackInfo.Category
+			sc.SessionId = callbackInfo.SessionId
+			sc.ContactId = callbackData["PhoneNumber"].(string)
+			sc.CallbackData = callbackInfo.CallbackObj
+			sc.RequestedTime = time.Now().UTC().String()
+			sc.Duration = callbackInfo.CallbackDuration
+
+			requestData, _ := json.Marshal(sc)
+			go UploadScheduledCallbackInfo(tenant, company, string(requestData))
+
 			resStr, _ := json.Marshal(ResponseGenerator(true, "Add callback info success", "", ""))
 			callbackServerSelfHost.RB().Write(resStr)
-			if callbackInfo.Class == "DIALER" && callbackInfo.Type == "CALLBACK" && callbackInfo.Category == "INTERNAL" {
-				go UploadCampaignMgrCallbackInfo(company, tenant, callbackInfo.CampaignId, callbackInfo.CallbackObj)
-			}
 		}
 
 		return
