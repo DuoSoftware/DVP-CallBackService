@@ -13,6 +13,7 @@ import (
 )
 
 var sentinelPool *sentinel.Client
+var securitylPool *sentinel.Client
 var redisPool *pool.Pool
 
 func InitiateRedis() {
@@ -41,6 +42,12 @@ func InitiateRedis() {
 		if len(sentinelIps) > 1 {
 			sentinelIp := fmt.Sprintf("%s:%s", sentinelIps[0], sentinelPort)
 			sentinelPool, err = sentinel.NewClientCustom("tcp", sentinelIp, 10, df, redisClusterName)
+
+			if err != nil {
+				errHndlr(err)
+			}
+
+			securitylPool, err = sentinel.NewClientCustom("tcp", sentinelIp, 10, df, redisClusterName)
 
 			if err != nil {
 				errHndlr(err)
@@ -660,10 +667,10 @@ func SecurityGet(key string) string {
 	var err error
 
 	if redisMode == "sentinel" {
-		client, err = sentinelPool.GetMaster(redisClusterName)
+		client, err = securitylPool.GetMaster(redisClusterName)
 		client.Cmd("select", "0")
 		errHndlr(err)
-		defer sentinelPool.PutMaster(redisClusterName, client)
+		defer securitylPool.PutMaster(redisClusterName, client)
 	} else {
 		client, err = redis.DialTimeout("tcp", securityIp, time.Duration(10)*time.Second)
 		errHndlr(err)
