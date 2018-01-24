@@ -3,9 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"time"
+
 	"github.com/DuoSoftware/gorest"
 	"github.com/satori/go.uuid"
-	"time"
 )
 
 type CallbackServerSelfHost struct {
@@ -59,7 +60,8 @@ func (callbackServerSelfHost CallbackServerSelfHost) AddCallbackByDuration(callb
 		callbackTime := time.Date(tmNow.Year(), tmNow.Month(), tmNow.Day(), tmNow.Hour(), tmNow.Minute(), secCount, 0, time.UTC)
 		fmt.Println("callbackTime:: ", callbackTime)
 
-		callbackInfo.SessionId = uuid.NewV4().String()
+		uuidV4, _ := uuid.NewV4()
+		callbackInfo.SessionId = uuidV4.String()
 		callbackInfo.Company = company
 		callbackInfo.Tenant = tenant
 		callbackInfo.DialoutTime = callbackTime
