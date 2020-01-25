@@ -1,23 +1,28 @@
-# Start from a Debian image with the latest version of Go installed
-# and a workspace (GOPATH) configured at /go.
-FROM golang
-ARG MAJOR_VER
-# Copy the local package files to the container's workspace.
-#ADD . /go/src/github.com/golang/example/outyet
+# Dockerfile References: https://docs.docker.com/engine/reference/builder/
 
-#RUN go get gopkg.in/DuoSoftware/DVP-CallBackService.$MAJOR_VER/CallbackServer
+# Start from the latest golang base image
+FROM golang:latest
 
-#RUN go install gopkg.in/DuoSoftware/DVP-CallBackService.$MAJOR_VER/CallbackServer
+# Add Maintainer Info
+LABEL maintainer="Duosoftware <admin@duosoftware.com>"
 
-RUN go get github.com/DuoSoftware/DVP-CallBackService/CallbackServer
+# Set the Current Working Directory inside the container
+WORKDIR /app
 
-# Build the outyet command inside the container.
-# (You may fetch or manage dependencies here,
-# either manually or with a tool like "godep".)
-RUN go install github.com/DuoSoftware/DVP-CallBackService/CallbackServer
+# Copy go mod and sum files
+COPY go.mod go.sum ./
 
-# Run the outyet command by default when the container starts.
-ENTRYPOINT /go/bin/CallbackServer
+# Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
+RUN go mod download
 
-# Document that the service listens on port 8836.
-EXPOSE 8840
+# Copy the source from the current directory to the Working Directory inside the container
+COPY . .
+
+# Build the Go app
+RUN go build -o main ./CallbackServer/
+
+# Expose port 8080 to the outside world
+EXPOSE 8835
+
+# Command to run the executable
+CMD ["./main"]
